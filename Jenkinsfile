@@ -47,17 +47,45 @@ pipeline {
 				sh "mvn failsave:integeration-test failsafe:verify"
 			}
 		}
-	}
 
-		post {
-			always {
-				echo 'Im awesome. I run always'
-			}
-			success {
-				echo 'I run when you are successful'
-			}
-			failure {
-				echo 'I run when you fail'
+		stage('Package') {
+			steps {
+				sh "mvn package -DskipTests"
 			}
 		}
+
+		stage('Build Docker Image') {
+			steps {
+				//"docker build -t saif178/currency-exchange-devops:$env.BUILD_TAG"
+				script {
+					dockerImage = docker.build("saif178/currency-exchange-devops:${env.BUILD_TAG}")
+				}
+			}
+		}
+
+		stage('Push Docker Image') {
+			steps {
+				script {
+					docker.withRegistry{
+						dockerImage.push();
+						dockerImage.push('latest');
+					}
+				}
+			}
+		}
+	}
+
+		
+
+	post {
+		always {
+			echo 'Im awesome. I run always'
+		}
+		success {
+			echo 'I run when you are successful'
+		}
+		failure {
+			echo 'I run when you fail'
+		}
+	}
 }
