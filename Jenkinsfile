@@ -4,11 +4,11 @@
 pipeline {
 	agent any
 	//agent {docker {image 'maven:3.6.3'}}
-	// environment {
-	// 	dockerHome = tool 'MyDocker'
-	// 	mavenHome = tool 'myMaven'
-	// 	PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
-	// }
+	environment {
+		dockerHome = tool 'MyDocker'
+		mavenHome = tool 'myMaven'
+		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+	}
 	stages {
 		stage('Chekout') {
 			steps {
