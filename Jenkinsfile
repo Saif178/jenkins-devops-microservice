@@ -23,12 +23,19 @@ pipeline {
 				echo "BUILD URL - $env.BUILD_URL"
 			}
 		}
+
 		stage('Compile') {
 			steps {
 				sh "mvn clean compile"
 			}
 		}
-			
+
+		stage('Dependency Check') {
+			steps {
+				sh "mvn dependency:tree"
+			}
+		}
+
 		stage('Test') {
 			steps {
 				sh "mvn test"
